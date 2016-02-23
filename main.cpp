@@ -4,10 +4,53 @@
 #include <deque>
 using namespace std;
 bool isDigit(string str);
-int *NumToDec(int * Num, unsigned int size, unsigned int base);
-int DecToNum(int * Num, unsigned int size, unsigned int base);
+int NumToDec(int Num[], unsigned int size, unsigned int base);
+int DecToNum(int Num[], unsigned int size, unsigned int baseNumber, unsigned int base);
 int StringToInt(string str, int *newNum);
 int print(deque <int> number, unsigned int base);
+
+
+int main()
+{
+    string iNumber;
+
+    cout << "Enter your number: ";
+    cin >> iNumber;
+    unsigned int size = iNumber.size();
+    int newNum[size];
+    StringToInt(iNumber, newNum);
+    unsigned int sizeNum = StringToInt(iNumber, newNum);
+    if(iNumber[0] == '0' && (iNumber[1] == 'x' || iNumber[1] == 'X'))
+    {
+        cout << "You have entered a number in HEXadecimal" << endl;
+        int itemDec = NumToDec(newNum, sizeNum, 16);
+        //DecToNum(itemDec, sizeNum - 2, 16, 8);
+        //DecToNum(itemDec, sizeNum - 2, 16, 2);
+        //DecToNum(NumToDec(newNum, sizeNum, 16), sizeNum, 2);
+    }
+    else if (iNumber[0] == '0')
+    {
+        cout << "You have entered a number in OCTal" << endl;
+        NumToDec(newNum, sizeNum, 8);
+    }
+    else if (iNumber[size - 1] == 'b' || iNumber[size - 1] == 'B')
+    {
+        cout << "You have entered a number in the BINary system" << endl;
+        NumToDec(newNum, sizeNum, 2);
+
+    }
+    else if (isDigit(iNumber) || iNumber[size - 1] == 'd' || iNumber[size - 1] == 'D')
+    {
+        cout << "You have entered a number in the DECimal system" << endl;
+        DecToNum(newNum, sizeNum, 10, 16);
+        DecToNum(newNum, sizeNum, 10, 8);
+        DecToNum(newNum, sizeNum, 10, 2);
+    }
+    else
+        cout << "It is not number. Please, try again!" << endl;
+    //delete[] newNum;
+    return 0;
+}
 
 bool isDigit(string str)
 {
@@ -22,47 +65,6 @@ bool isDigit(string str)
             return false;
     }
     return result;
-}
-
-int main()
-{
-    string iNumber;
-
-    cout << "Enter your number: ";
-    cin >> iNumber;
-    unsigned int size = iNumber.size();
-    int * newNum = new int [size];
-    StringToInt(iNumber, newNum);
-    unsigned int sizeNum = StringToInt(iNumber, newNum);
-    if(iNumber[0] == '0' && (iNumber[1] == 'x' || iNumber[1] == 'X'))
-    {
-        cout << "You have entered a number in HEXadecimal" << endl;
-        NumToDec(newNum, sizeNum, 16);
-        //int * itemDec = ;
-        DecToNum(NumToDec(newNum, sizeNum, 16), sizeNum - 2, 8);
-        //DecToNum(NumToDec(newNum, sizeNum, 16), sizeNum, 2);
-    }
-    else if (iNumber[0] == '0')
-    {
-        cout << "You have entered a number in OCTal" << endl;
-        NumToDec(newNum, sizeNum, 8);
-    }
-    else if (iNumber[size - 1] == 'b' || iNumber[size - 1] == 'B')
-    {
-        cout << "You have entered a number in the BINary system" << endl;
-        NumToDec(newNum, sizeNum, 2);
-    }
-    else if (isDigit(iNumber) || iNumber[size - 1] == 'd' || iNumber[size - 1] == 'D')
-    {
-        cout << "You have entered a number in the DECimal system" << endl;
-        DecToNum(newNum, sizeNum, 16);
-        DecToNum(newNum, sizeNum, 8);
-        DecToNum(newNum, sizeNum, 2);
-    }
-    else
-        cout << "It is not number. Please, try again!" << endl;
-    delete[] newNum;
-    return 0;
 }
 
 int StringToInt(string str, int * newNum)
@@ -114,7 +116,7 @@ int StringToInt(string str, int * newNum)
     cout << sizeNewNum << endl;
     return sizeNewNum;
 }
-int * NumToDec(int * Num, unsigned int size, unsigned int base)
+int NumToDec(int Num[], unsigned int size, unsigned int base)
 {
     int result = 0;
     for (size_t i = 0; i < size; i++)
@@ -122,10 +124,10 @@ int * NumToDec(int * Num, unsigned int size, unsigned int base)
         result = result + (Num[i] * pow(base, (size - 1 - i)));
     }
     cout << "DEC: " << result << endl;
-    int * pnt = &result;
-    return pnt;
+    //int * pnt = &result;
+    return result;
 }
-int DecToNum(int * Num, unsigned int size, unsigned int base)
+int DecToNum(int Num[], unsigned int size, unsigned int baseNumber, unsigned int base)
 {
     int result = 0;
     unsigned int number = 0;
@@ -135,8 +137,8 @@ int DecToNum(int * Num, unsigned int size, unsigned int base)
     for (int i = size - 1; i >= 0; i--)
     {
         number += Num[i] * tmp;
-        tmp *= 10;
-        //cout << "i = " << i << " number = " << number << " + " << Num[i] << " * " << tmp << endl;
+        tmp *= baseNumber;
+        cout << "i = " << i << " number = " << number << " + " << Num[i] << " * " << tmp << endl;
     }
     while (number != 0)
     {
